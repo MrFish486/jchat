@@ -3,8 +3,8 @@ import java.net.*;
 public class User {
 	public PermissionSet permissions;
 	public String username;
-	public INetAddress ip;
-	public User (PermissionSet permissions, String username, INetAddress ip) {
+	public InetAddress ip;
+	public User (PermissionSet permissions, String username, InetAddress ip) {
 		this.permissions = permissions;
 		this.username = username;
 		this.ip = ip;

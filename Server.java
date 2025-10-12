@@ -9,15 +9,15 @@ public class Server {
 	private MessageDataBase messageTable;
 	public Server (int port, int messageHistoryLimit) {
 		this.port = port;
-		this.messageHistoryLimit;
-		this.userTable = new UserDataBase(messageHistoryLimit);
-		this.messageTable = new MessageDataBase();
+		this.messageHistoryLimit = messageHistoryLimit;
+		this.userTable = new UserDataBase();
+		this.messageTable = new MessageDataBase(messageHistoryLimit);
 	}
-	public void listen () {
+	public void listen () throws Exception {
 		byte[] RcvData = new byte[1024];
-		DatagramPacket  rcv = new DatagramPacket(rcvdata, rcvdata.length);
-		DatagramSocket  socket = new DatagramSocket(port);
-		String request, reply;
+		DatagramPacket rcv = new DatagramPacket(RcvData, RcvData.length);
+		DatagramSocket socket = new DatagramSocket(port);
+		String request, reply = "";
 		Pattern a = Pattern.compile("[a-zA-Z0-9]{3,};.*");
 		Pattern b = Pattern.compile("r;[a-zA-Z0-9]{3,}");
 		Pattern c = Pattern.compile("g;");
@@ -39,10 +39,26 @@ public class Server {
 				}
 			}
 			DatagramPacket outGoingPacket = new DatagramPacket(reply.getBytes(), reply.getBytes().length, rcv.getAddress(), rcv.getPort());
-			socket.send(outGoingPacket);
+			try {
+				socket.send(outGoingPacket);
+			} catch (Exception e) {
+				System.err.println("Failed to send reply to " + rcv.getAddress().toString() + ":" + String.valueOf(rcv.getPort()));
+			}
 		}
 	}
 	public static void main (String[] args) {
-		
+		Server server = new Server(4096, 10);
+		Runner runner = new Runner(server);
+		new Thread(runner).start();
+	}
+}
+
+private class Runner implements Runnable {
+	private final Server executor;
+	public Runner (Server executor) {
+		this.executor = executor;
+	}
+	public void run () {
+		this.executor.listen();
 	}
 }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.net.*;
 
 public class UserDataBase {
 	public ArrayList <User> users;
@@ -15,9 +16,9 @@ public class UserDataBase {
 		this.users.add(user);
 		return true;
 	}
-	public boolean verifyUser (String username, INetAddress ip) {
+	public boolean verifyUser (String username, InetAddress ip) {
 		for (int i = 0; i < this.users.size(); i ++) {
-			if (user.username.equals(this.users.get(i).username) && user.ip.toString().equals(this.users.get(i).ip.toString())) {
+			if (username.equals(this.users.get(i).username) && ip.toString().equals(this.users.get(i).ip.toString())) {
 				return true;
 			}
 		}
