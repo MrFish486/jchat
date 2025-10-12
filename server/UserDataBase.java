@@ -24,4 +24,12 @@ public class UserDataBase {
 		}
 		return false;
 	}
+	public int getUser (String username, InetAddress ip) {
+		for (int i = 0; i < this.users.size(); i ++) {
+			if (username.equals(this.users.get(i).username) && ip.toString().equals(this.users.get(i).ip.toString())) {
+				return i;
+			}
+		}
+		return -1;
+	}
 }

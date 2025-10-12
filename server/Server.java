@@ -1,6 +1,7 @@
 import java.net.*;
 import java.io.IOException;
 import java.util.regex.*;
+import java.util.Arrays;
 
 public class Server {
 	private int port;
@@ -18,15 +19,19 @@ public class Server {
 		DatagramPacket rcv = new DatagramPacket(RcvData, RcvData.length);
 		DatagramSocket socket = new DatagramSocket(port);
 		String request, reply = "";
-		Pattern a = Pattern.compile("[a-zA-Z0-9]{3,};.*");
-		Pattern b = Pattern.compile("r;[a-zA-Z0-9]{3,}");
-		Pattern c = Pattern.compile("g;");
+		Pattern a = Pattern.compile("[a-zA-Z0-9]{3,20};.{0,1000}");
+		Pattern b = Pattern.compile("r;[a-zA-Z0-9]{3,20}");
 		while (true) {
 			socket.receive(rcv);
 			request = new String(rcv.getData(), 0, rcv.getLength());
 			if (a.matcher(request).matches()) {
 				if (this.userTable.verifyUser(request.split(";")[0], rcv.getAddress())) {
-
+					reply = "d";
+					this.messageTable.send(new Message(
+						this.userTable.users.get(this.userTable.getUser(request.split(";")[0], rcv.getAddress())),
+						//String.join(";", Arrays.copyOfRange(request.split(";"), 1, request.split(";").length - 1))
+						request.split(";")[1]
+					));
 				} else {
 					reply = "!";
 				}
@@ -37,7 +42,9 @@ public class Server {
 				} else {
 					reply = "!";
 				}
-			}
+			} else if (request.equals("g;")) {
+				reply = this.messageTable.prettyPrint();
+			} else reply = "?";
 			DatagramPacket outGoingPacket = new DatagramPacket(reply.getBytes(), reply.getBytes().length, rcv.getAddress(), rcv.getPort());
 			try {
 				socket.send(outGoingPacket);
@@ -50,15 +57,5 @@ public class Server {
 		Server server = new Server(4096, 10);
 		Runner runner = new Runner(server);
 		new Thread(runner).start();
-	}
-}
-
-private class Runner implements Runnable {
-	private final Server executor;
-	public Runner (Server executor) {
-		this.executor = executor;
-	}
-	public void run () {
-		this.executor.listen();
 	}
 }
