@@ -6,6 +6,7 @@ public class UserDataBase {
 		this.users = new ArrayList <User> ();
 	}
 	public boolean addUser (User user) {
+		if (user.username.contains(";") || user.username.length() < 2) return false;
 		for (int i = 0; i < this.users.size(); i ++) {
 			if (user.username.equals(this.users.get(i).username)) {
 				return false;

@@ -7,8 +7,8 @@ public class MessageDataBase {
 		this.messages = new ArrayList <Message> ();
 	}
 	public void clean (int historyLimit) {
-		if (this.messages.size() <= limit) return;
-		while (this.messages.size() > limit) {
+		if (this.messages.size() <= historyLimit) return;
+		while (this.messages.size() > historyLimit) {
 			this.messages.remove(0);
 		}
 	}

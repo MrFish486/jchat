@@ -4,8 +4,7 @@ public class User {
 	public PermissionSet permissions;
 	public String username;
 	public INetAddress ip;
-	public User (PermissionSet permissions, String username, INetAddress ip) throws Exception {
-		if (username.contains(";")) throw new Exception("Bad username");
+	public User (PermissionSet permissions, String username, INetAddress ip) {
 		this.permissions = permissions;
 		this.username = username;
 		this.ip = ip;
