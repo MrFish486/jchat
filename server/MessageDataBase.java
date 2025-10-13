@@ -3,9 +3,17 @@ import java.util.ArrayList;
 public class MessageDataBase {
 	public ArrayList <Message> messages;
 	public int historyLimit;
+	public ServerUser serveruser;
 	public MessageDataBase (int historyLimit) {
 		this.messages = new ArrayList <Message> ();
 		this.historyLimit = historyLimit;
+		try {
+			this.serveruser = new ServerUser();
+		} catch (Exception e) {
+			System.err.println("Error initializing server user.");
+			e.printStackTrace();	
+			System.exit(5);
+		}
 	}
 	public void clean (int thresh) {
 		if (this.messages.size() <= thresh) return;
@@ -21,6 +29,9 @@ public class MessageDataBase {
 		}
 		return false;
 	}
+	public void sendServerMessage (String message) {
+		this.messages.add(new Message(this.serveruser, message));
+	}
 	public String prettyPrint () {
 		int largestHandleLength = 0;
 		for (int i = 0; i < this.messages.size(); i ++) {
@@ -28,7 +39,7 @@ public class MessageDataBase {
 		}
 		String output = "";
 		for (int i = 0; i < this.messages.size(); i ++) {
-			output += String.format("%" + largestHandleLength + "s | %s", this.messages.get(i).author.handle(), this.messages.get(i).content);
+			output += String.format("%-" + largestHandleLength + "s | %s", this.messages.get(i).author.handle(), this.messages.get(i).content);
 			if (i != this.messages.size()) output += "\n";
 		}
 		return output;

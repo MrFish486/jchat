@@ -2,6 +2,8 @@ import java.net.*;
 import java.io.IOException;
 import java.util.regex.*;
 import java.util.Arrays;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class Server {
 	private int port;
@@ -29,8 +31,8 @@ public class Server {
 					reply = "d";
 					this.messageTable.send(new Message(
 						this.userTable.users.get(this.userTable.getUser(request.split(";")[0], rcv.getAddress())),
-						//String.join(";", Arrays.copyOfRange(request.split(";"), 1, request.split(";").length - 1))
-						request.split(";")[1]
+						String.join(";", Arrays.copyOfRange(request.split(";"), 1, request.split(";").length))
+						//request.split(";")[1]
 					));
 				} else {
 					reply = "!";
@@ -39,6 +41,7 @@ public class Server {
 			} else if (b.matcher(request).matches()) {
 				if (this.userTable.addUser(new User(new PermissionSet(true), request.split(";")[1], rcv.getAddress()))) {
 					reply = "d";
+					this.messageTable.sendServerMessage("A new user has registered. (" + this.userTable.users.get(this.userTable.getUser(request.split(";")[1], rcv.getAddress())).handle() + ")");
 				} else {
 					reply = "!";
 				}
@@ -57,5 +60,8 @@ public class Server {
 		Server server = new Server(4096, 10);
 		Runner runner = new Runner(server);
 		new Thread(runner).start();
+	}
+	public String time () {
+		return new SimpleDateFormat("MM/dd HH:mm:ss").format(new Date());
 	}
 }
