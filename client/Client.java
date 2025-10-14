@@ -30,7 +30,7 @@ public class Client {
 				System.err.println("An unknown error occurred. Your account was likely not registered.");
 				System.exit(9);
 			}
-		} else {
+		} else if (args.length == 0) {
 			client.promptConfig();
 			Receiver receiver = new Receiver("", client.address, client.port, 200, true);
 			Thread receiverThread = new Thread(receiver);
@@ -39,6 +39,8 @@ public class Client {
 			while (true) {
 				Receiver.get(client.address, client.port, client.username + ";" + stdinReader.nextLine());
 			}
+		} else {
+			System.out.println("Jchat 0.1\nUsage:\nclient register <username> - Register an account\nclient                     - Connect to server");
 		}
 	}
 	public Client () throws Exception {

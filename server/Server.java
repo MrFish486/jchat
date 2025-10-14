@@ -56,8 +56,15 @@ public class Server {
 			}
 		}
 	}
-	public static void main (String[] args) {
-		Server server = new Server(4096, 10);
+	public static void main (String[] args) throws Exception {
+		int port = 4096;
+		if (args.length > 0) {
+			port = Integer.parseInt(args[0]);
+			System.out.println("Using port " + port + ".");
+		} else {
+			System.out.println("No port provided. Defaulting to port 4096.");
+		}
+		Server server = new Server(port, 10);
 		Runner runner = new Runner(server);
 		new Thread(runner).start();
 	}
