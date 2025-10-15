@@ -36,11 +36,16 @@ public class Client {
 			Thread receiverThread = new Thread(receiver);
 			receiverThread.start();
 			Scanner stdinReader = new Scanner(System.in);
+			Runtime.getRuntime().addShutdownHook(new Thread(new Runnable () {
+				public void run () {
+					Client.clear();
+				}
+			}));
 			while (true) {
 				Receiver.get(client.address, client.port, client.username + ";" + stdinReader.nextLine());
 			}
 		} else {
-			System.out.println("Jchat 0.1\nUsage:\nclient register <username> - Register an account\nclient                     - Connect to server");
+			System.out.println("Jchat 0.2\nUsage:\nclient register <username> - Register an account\nclient                     - Connect to server");
 		}
 	}
 	public Client () throws Exception {
