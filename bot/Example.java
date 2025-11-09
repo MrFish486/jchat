@@ -6,14 +6,14 @@ public class Example {
 		BotEnvironment env = new BotEnvironment(
 			InetAddress.getByName("localhost" /* replace with server address */),
 			8001, /* replace with server port */
-			"BasicBot",
-			new BasicBot ()
+			"BasicBot", /* replace with bot name */
+			new BasicBot () /* replace with bot instance */
 		);
 		Thread executionThread = new Thread(env);
 		executionThread.start();
 	}
 }
-class BasicBot implements Bot {
+class BasicBot extends Bot {
 	Random random;
 	public BasicBot () {
 		this.random = new Random();
